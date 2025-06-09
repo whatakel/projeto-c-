@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using TodoList.Data;
 using TodoList.Models;
@@ -57,5 +58,43 @@ namespace TarefasApi.Controllers
 
             return Forbid("Você não tem permissão para atualizar esta tarefa.");
         }
+        [HttpPost]
+        public IActionResult CriarTarefa([FromBody] NovaTarefaDto novaTarefa)
+        {
+            if (string.IsNullOrWhiteSpace(novaTarefa.Usuario) || string.IsNullOrWhiteSpace(novaTarefa.Titulo))
+            {
+                return BadRequest("Os campos 'Usuario' e 'Titulo' são obrigatórios.");
+            }
+
+            BancoDados.CarregarDados();
+
+            // Gera um novo ID baseado no maior ID existente
+            int novoId = BancoDados.Tarefas.Any()
+                ? BancoDados.Tarefas.Max(t => t.Id) + 1
+                : 1;
+
+            var tarefa = new TodoTask
+            {
+                Id = novoId,
+                Usuario = novaTarefa.Usuario,
+                Titulo = novaTarefa.Titulo,
+                Status = false,
+                CriadoEm = DateTime.Now,
+                ConcluidoEm = null
+            };
+
+            BancoDados.Tarefas.Add(tarefa);
+            BancoDados.SalvarDados();
+            
+            return CreatedAtAction(nameof(Get), new { tipoUsuario = "admin", nomeUsuario = tarefa.Usuario }, tarefa);
+        }
+
+
+    }
+    // DTO para receber apenas Usuario e Titulo
+    public class NovaTarefaDto
+    {
+        public string Usuario { get; set; }
+        public string Titulo { get; set; }
     }
 }

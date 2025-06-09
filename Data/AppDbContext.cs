@@ -8,7 +8,8 @@ namespace TodoList.Data
 {
     public static class BancoDados
     {
-        private static readonly string caminhoArquivo = "Data/dados.json";
+        private static readonly string caminhoArquivo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "dados.json");
+
 
         public static List<TodoTask> Tarefas { get; private set; } = new List<TodoTask>();
 
@@ -27,6 +28,12 @@ namespace TodoList.Data
 
         public static void SalvarDados()
         {
+            string pasta = Path.GetDirectoryName(caminhoArquivo);
+            if (!Directory.Exists(pasta))
+            {
+                Directory.CreateDirectory(pasta);
+            }
+
             string json = JsonSerializer.Serialize(Tarefas, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(caminhoArquivo, json);
         }

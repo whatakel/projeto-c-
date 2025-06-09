@@ -1,37 +1,5 @@
 [
   {
-    "Id": 9,
-    "Titulo": "Responder e-mails",
-    "Usuario": "Maria",
-    "Status": true,
-    "CriadoEm": "2025-05-29T09:12:03-03:00",
-    "ConcluidoEm": "2025-05-29T10:05:18.2345678-03:00"
-  },
-  {
-    "Id": 10,
-    "Titulo": "Organizar arquivos",
-    "Usuario": "Gustavo",
-    "Status": true,
-    "CriadoEm": "2025-05-26T13:40:55.6789012-03:00",
-    "ConcluidoEm": null
-  },
-  {
-    "Id": 11,
-    "Titulo": "Planejar viagem",
-    "Usuario": "Leticia",
-    "Status": false,
-    "CriadoEm": "2025-05-27T17:08:22.3344556-03:00",
-    "ConcluidoEm": null
-  },
-  {
-    "Id": 12,
-    "Titulo": "Consertar torneira",
-    "Usuario": "Kelvin",
-    "Status": true,
-    "CriadoEm": "2025-05-25T15:15:15-03:00",
-    "ConcluidoEm": "2025-05-25T17:00:00.1234567-03:00"
-  },
-  {
     "Id": 13,
     "Titulo": "Ligar para cliente",
     "Usuario": "Maria",

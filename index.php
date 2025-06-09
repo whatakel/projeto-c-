@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['excluir'])) {
     $context = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
 
-    echo "<div class='alert alert-success'>Tarefa $id excluída com sucesso!</div>";
+    // echo "<div class='alert alert-success'>Tarefa $id excluída com sucesso!</div>";
 
     // Opcional: recarrega a página após exclusão
     header("Refresh:1");
@@ -57,7 +57,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mudar_status'])) {
     if ($response === false) {
         echo "<div class='alert alert-danger'>Erro ao atualizar status.</div>";
     } else {
-        echo "<div class='alert alert-success'>Status atualizado com sucesso.</div>";
+        // echo "<div class='alert alert-success'>Status atualizado com sucesso.</div>";
+        header("Refresh:1");
+        exit;
+    }
+
+
+    //criar
+
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['criar'])) {
+    $usuario = $_POST['usuario'];
+    $titulo = $_POST['titulo'];
+
+    $url = "http://localhost:5093/api/tarefas";
+
+    // Monta o corpo JSON
+    $dados = json_encode([
+        "Usuario" => $usuario,
+        "Titulo" => $titulo
+    ]);
+
+    $options = [
+        'http' => [
+            'method'  => 'POST',
+            'header'  => "Content-Type: application/json",
+            'content' => $dados
+        ]
+    ];
+
+    $context = stream_context_create($options);
+    $response = file_get_contents($url, false, $context);
+    $error = error_get_last();
+
+    if ($response === false) {
+        echo "<div class='alert alert-danger'>Erro ao criar tarefa.</div>";
+    } else {
+        // echo "<div class='alert alert-success'>Tarefa criada com sucesso!</div>";
         header("Refresh:1");
         exit;
     }
@@ -171,10 +207,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mudar_status'])) {
 
     <div class="container">
         <h1>ToDo List</h1>
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <form method="post" class="d-flex gap-1 column">
+                <input type="hidden" name="criar" value="1">
+                <label for="usuario"></label>
+                <input type="text" id="usuario" name="usuario" placeholder="Nome do usuario" class="form-control" required>
 
-        <div class="search-bar">
-            <label for="search">Pesquisar Título:</label>
-            <input type="text" id="search" placeholder="Digite um título...">
+                <label for="titulo"></label>
+                <input type="text" id="titulo" name="titulo" placeholder="Titulo da tarefa" class="form-control" required>
+
+                <button type="submit" class="btn btn-success col-3">Criar Tarefa</button>
+            </form>
+            <div class="search-bar">
+                <label for="search"></label>
+                <input type="text" id="search" placeholder="Pesquisar Título">
+            </div>
         </div>
 
         <table id="tabela-tarefas">
@@ -188,8 +235,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mudar_status'])) {
                 </tr>
             </thead>
             <tbody>
-                <?php 
-                 $contador = 1; 
+                <?php
+                $contador = 1;
                 foreach ($tarefas as $tarefa): ?>
                     <?php
                     $id = htmlspecialchars($tarefa['id']);
